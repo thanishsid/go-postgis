@@ -1,7 +1,6 @@
-go-postgis
-==========
+# go-postgis
 
-PostGIS support for Go. Works with any Postgres driver.
+PostGIS support for Go. Works with PGX driver.
 
 ## Example
 
