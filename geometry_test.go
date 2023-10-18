@@ -11,18 +11,9 @@ type Fatalistic interface {
 }
 
 func openTestConn(t Fatalistic) *sql.DB {
-	datname := os.Getenv("PGDATABASE")
-	sslmode := os.Getenv("PGSSLMODE")
+	dsn := os.Getenv("PGDSN")
 
-	if datname == "" {
-		os.Setenv("PGDATABASE", "pqgotest")
-	}
-
-	if sslmode == "" {
-		os.Setenv("PGSSLMODE", "disable")
-	}
-
-	conn, err := sql.Open("postgres", "")
+	conn, err := sql.Open("pgx", dsn)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -36,7 +27,7 @@ func openTestConn(t Fatalistic) *sql.DB {
 }
 
 func compareGeometry(db *sql.DB, g1 Geometry, g2 Geometry) (bool, error) {
-	if err := db.QueryRow("SELECT GeomFromEWKB($1);", g1).Scan(g2); err != nil {
+	if err := db.QueryRow("SELECT $1;", g1).Scan(g2); err != nil {
 		return false, err
 	}
 
